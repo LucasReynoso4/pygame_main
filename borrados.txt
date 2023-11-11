@@ -1,0 +1,9 @@
+      # if self.rect.bottom >= H:
+        #     self.rect.bottom = H
+        #     self.esta_saltando = False
+        #     self.desplazamiento_y = 0
+        # if self.rect.y > 50:
+        #     print(self.rect.y)
+        #     self.esta_saltando = False
+        #     print( self.esta_saltando)
+        #     self.desplazamiento_y = 0
