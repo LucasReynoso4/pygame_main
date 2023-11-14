@@ -1,5 +1,6 @@
 import pygame, sys, time
 from clases import *
+from base_de_datos import crear_tablas_db, insertar_jugador, obtener_ranking
 pygame.init()
 
 
@@ -70,7 +71,7 @@ salir_boton_perdiste = Boton(salir_imagen, (150, 50), 650, H-220)
 
 def iniciar_juego(volumen = 0.2):
     modo_intro = True
-    
+    crear_tablas_db()
     audio_click = pygame.mixer.Sound(UBICACION_SONIDO_CLICK)
     audio_jugar = pygame.mixer.Sound(UBICACION_SONIDO_INICIAR)
     pygame.mixer.music.load(UBICACION_SONIDO_MUSICA_MENU)
@@ -169,6 +170,23 @@ def ranking(volumen=0.2):
                     modo_ranking = False
 
         PANTALLA.blit(fondo_ranking, (0, 0))
+        ranking = obtener_ranking()
+        posiciones = [(350, 250), (350, 300), (350, 350)]
+        num_elementos = len(ranking)
+
+        for i in range(3):
+            if i < num_elementos:
+                nombre, puntuacion = ranking[i]
+                if i < 3:
+                    x, y = posiciones[i]
+                    color_fuente = "White" if i == 0 else "Grey"
+                    fuente = pygame.font.SysFont("Arial", 36, bold=True)
+                    texto_puesto = f"{i+1}. {nombre}"
+                    text_puesto = fuente.render(texto_puesto, True, color_fuente)
+                    text_puntuacion = fuente.render(str(puntuacion), True, color_fuente)
+                    PANTALLA.blit(text_puesto, (x, y))
+                    PANTALLA.blit(text_puntuacion, (x + 250, y))
+
 
 
         if jugar_boton_centrado_ranking.renderizar(PANTALLA):
@@ -290,6 +308,7 @@ def perdiste(puntuacion,volumen):
         if guardar_boton_perdiste.renderizar(PANTALLA):
             audio_click.play()
             modo_perdiste = False
+            insertar_jugador(nombre, puntuacion)
             ranking(volumen)
         if salir_boton_perdiste.renderizar(PANTALLA):
             audio_click.play()
@@ -297,7 +316,7 @@ def perdiste(puntuacion,volumen):
             sys.exit()
         pygame.display.flip()
 
-def ganaste(ranking ,volumen):
+def ganaste(puntuacion ,volumen):
     modo_ganaste = True
     fuente = pygame.font.SysFont("Arial", 26)
     nombre = ''
@@ -328,6 +347,7 @@ def ganaste(ranking ,volumen):
         if guardar_boton_ganaste.renderizar(PANTALLA):
             audio_click.play()
             modo_ganaste = False
+            insertar_jugador(nombre, puntuacion)
             ranking(volumen)
         if salir_boton_ganaste.renderizar(PANTALLA):
             audio_click.play()
@@ -565,7 +585,11 @@ def bucle_de_juego_nivel_1(volumen_parametro = 0.2):
         if enemigos_eliminados > 3:
             ganaste(puntuacion, volumen)
 
+        
         actualizar_pantalla(PANTALLA, lista_plataformas, grupo_enemigos, grupo_plataformas, orbe, personaje)
+        rect = pygame.Rect(0,520,W,20)
+        pygame.draw.rect(PANTALLA,(250,250,250),rect)
+
     
         for proyectil in proyectiles_juego_personaje:
             proyectil.update()

@@ -14,7 +14,9 @@ limite_velocidad_caida = 15
 velocidad_proyectil = 5
 contador_muerte = 0
 
-piso = pygame.Rect(0,0,W,20)
+
+
+piso = pygame.Rect(0,519,W,20)
 
 PANTALLA = pygame.display.set_mode((W,H))
 def girar_imagenes(lista_original, flip_x: bool, flip_y: bool)-> list:

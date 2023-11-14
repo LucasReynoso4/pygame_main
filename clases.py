@@ -48,9 +48,8 @@ class Personaje(pygame.sprite.Sprite):
         
     def update(self):
         keys = pygame.key.get_pressed()
-        
-        colision_piso = False
-        
+ 
+
         if keys[pygame.K_RIGHT] and self.rect.right < W - self.velocidad:
             self.que_hace = "Derecha"
             self.rect.x += self.velocidad
@@ -59,7 +58,9 @@ class Personaje(pygame.sprite.Sprite):
             self.que_hace = "Izquierda"
             self.rect.x -= self.velocidad
             self.direccion = "izquierda"  # Actualiza la dirección cuando se mueve hacia la izquierda
-        elif keys[pygame.K_UP] and not self.esta_saltando:
+
+            
+        elif  self.rect.colliderect(piso) and keys[pygame.K_UP] and not self.esta_saltando :
                 self.que_hace = "Salta"
                 self.desplazamiento_y = potencia_salto
                 self.esta_saltando = True
