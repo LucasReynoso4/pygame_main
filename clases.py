@@ -59,8 +59,9 @@ class Personaje(pygame.sprite.Sprite):
             self.rect.x -= self.velocidad
             self.direccion = "izquierda"  # Actualiza la dirección cuando se mueve hacia la izquierda
 
-            
-        elif  self.rect.colliderect(piso) and keys[pygame.K_UP] and not self.esta_saltando :
+            #SALTO
+ 
+        elif self.rect.colliderect(piso) and keys[pygame.K_UP] and not self.esta_saltando:  # Asegúrate de llamar a la función
                 self.que_hace = "Salta"
                 self.desplazamiento_y = potencia_salto
                 self.esta_saltando = True
@@ -95,7 +96,17 @@ class Personaje(pygame.sprite.Sprite):
             if lado == "top":
                 self.rect.y += self.desplazamiento_x
 
+
         self.lados = obtener_rectangulos(self.rect)
+
+    def colision_con_plataformas(self, plataformas):
+        for plataforma in plataformas:
+            if self.lados["bottom"].colliderect(plataforma.rect) and self.desplazamiento_y >= 0:
+                self.rect.y = plataforma.rect.top - self.rect.height
+                self.esta_saltando = False
+                self.desplazamiento_y = 0
+                break  # Importante salir del bucle después de la primera colisió
+
 class Enemigo(pygame.sprite.Sprite):
     def __init__(self, x, y, animaciones):
         super().__init__()

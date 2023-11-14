@@ -2,6 +2,8 @@ import pygame
 pygame.init()
 
 W, H = 1200, 600
+TITULO_VENTANA = "TRUNKS ADVENTURES"
+
 
 proyectiles_juego = pygame.sprite.Group()  
 proyectiles_juego_personaje = pygame.sprite.Group() 
@@ -16,7 +18,7 @@ contador_muerte = 0
 
 
 
-piso = pygame.Rect(0,519,W,20)
+piso = pygame.Rect(0,520,W,20)
 
 PANTALLA = pygame.display.set_mode((W,H))
 def girar_imagenes(lista_original, flip_x: bool, flip_y: bool)-> list:
