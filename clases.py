@@ -46,10 +46,10 @@ class Personaje(pygame.sprite.Sprite):
         self.tiempo_ultimo_disparo = 0  # Variable para rastrear el tiempo del último disparo
         self.retraso_entre_disparos = 700 # Establece el retraso deseado entre disparos en milisegundos
         
-    def update(self):
+    def update(self, plataformas):
         keys = pygame.key.get_pressed()
+        
  
-
         if keys[pygame.K_RIGHT] and self.rect.right < W - self.velocidad:
             self.que_hace = "Derecha"
             self.rect.x += self.velocidad
@@ -58,14 +58,13 @@ class Personaje(pygame.sprite.Sprite):
             self.que_hace = "Izquierda"
             self.rect.x -= self.velocidad
             self.direccion = "izquierda"  # Actualiza la dirección cuando se mueve hacia la izquierda
-
             #SALTO
- 
-        elif self.rect.colliderect(piso) and keys[pygame.K_UP] and not self.esta_saltando:  # Asegúrate de llamar a la función
-                self.que_hace = "Salta"
-                self.desplazamiento_y = potencia_salto
-                self.esta_saltando = True
+        elif self.rect.colliderect(piso) and keys[pygame.K_UP] and self.esta_saltando == False:
+                    self.que_hace = "Salta"
+                    self.desplazamiento_y = -potencia_salto
+                    self.esta_saltando = True
 
+        
         elif keys[pygame.K_q]:
             if self.direccion == "izquierda":
                 self.que_hace = "Ataque_izquierda"  # Ataque hacia la izquierda si la dirección es "izquierda"
@@ -85,11 +84,17 @@ class Personaje(pygame.sprite.Sprite):
         else:    
             self.que_hace = "Quieto"
             self.desplazamiento_x = 0
-        
-        if self.rect.colliderect(piso):
-            self.rect.y = piso.y - self.rect.height
-            self.esta_saltando = False
-            self.desplazamiento_y = 0
+
+
+            for plataforma in plataformas:
+                if self.rect.colliderect(plataforma):
+                    self.que_hace = "Salta"
+                    self.desplazamiento_y = -potencia_salto
+                    self.esta_saltando = True
+                    print("entro....")
+                    break 
+
+
 
         self.rect.x += self.desplazamiento_x
         for lado in self.lados:
@@ -105,7 +110,7 @@ class Personaje(pygame.sprite.Sprite):
                 self.rect.y = plataforma.rect.top - self.rect.height
                 self.esta_saltando = False
                 self.desplazamiento_y = 0
-                break  # Importante salir del bucle después de la primera colisió
+                break  # Importante salir del bucle después de la primera colisión
 
 class Enemigo(pygame.sprite.Sprite):
     def __init__(self, x, y, animaciones):

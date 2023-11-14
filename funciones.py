@@ -190,7 +190,6 @@ def ranking(volumen=0.2):
                     PANTALLA.blit(text_puntuacion, (x + 250, y))
 
 
-
         if jugar_boton_centrado_ranking.renderizar(PANTALLA):
             audio_click.play()
             modo_ranking = False
@@ -529,7 +528,7 @@ def bucle_de_juego_nivel_1(volumen_parametro = 0.2):
                     retorno = pausa(volumen)
                     volumen = retorno['volumen']
 
-        personaje.update()
+        personaje.update(grupo_plataformas)
         personaje.colision_con_plataformas(grupo_plataformas)
         rectangulo_espada.x = personaje.rect.x +45
         rectangulo_espada.y = personaje.rect.y 
@@ -713,7 +712,7 @@ def bucle_de_juego_nivel_2(volumen_parametro = 0.2): #no terminado
                     retorno = pausa(volumen)
                     volumen = retorno['volumen']
 
-        personaje.update()
+        personaje.update(grupo_plataformas)
         personaje.colision_con_plataformas(grupo_plataformas)
         grupo_plataformas.update()
         grupo_plataformas.draw(PANTALLA)
@@ -926,7 +925,8 @@ def bucle_de_juego_nivel_3(volumen_parametro = 0.2): #no terminado
                 if evento.key == pygame.K_p or evento.key == pygame.K_ESCAPE:
                     retorno = pausa(volumen)
                     volumen = retorno['volumen']
-        personaje.update()
+        personaje.update(grupo_plataformas)
+        personaje.colision_con_plataformas(grupo_plataformas)
         rectangulo_espada.x = personaje.rect.x +45
         rectangulo_espada.y = personaje.rect.y
         rectangulo_espada_izquierda.x = personaje.rect.x -45

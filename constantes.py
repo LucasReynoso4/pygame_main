@@ -1,6 +1,7 @@
 import pygame
 pygame.init()
 
+#ANCHO, ALTO
 W, H = 1200, 600
 TITULO_VENTANA = "TRUNKS ADVENTURES"
 
@@ -140,5 +141,6 @@ enemigo_muere = [
 ]
 enemigo_camina_izquierda = girar_imagenes(enemigo_camina, True, False)
 
-#BOSS
+
+
 
