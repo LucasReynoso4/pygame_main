@@ -3,6 +3,15 @@ from constantes import *
 
 
 def obtener_rectangulos(principal: pygame.Rect):
+    """
+Crea y devuelve un diccionario que contiene varios rectángulos asociados al rectángulo principal.
+
+Parameters:
+- principal (pygame.Rect): El rectángulo principal del cual se derivan los demás.
+
+Returns:
+- dict: Un diccionario que contiene rectángulos etiquetados como 'main', 'bottom', 'right', 'left' y 'top'.
+"""
     diccionario = {}
     diccionario["main"] = principal
     diccionario["bottom"] = pygame.Rect(principal.left, principal.bottom - 10, principal.width, 10)
@@ -14,7 +23,25 @@ def obtener_rectangulos(principal: pygame.Rect):
 
 
 class Plataforma(pygame.sprite.Sprite):
+    """
+Clase que representa una plataforma en el juego.
+
+Attributes:
+- x (int): Coordenada x de la posición de la plataforma.
+- y (int): Coordenada y de la posición de la plataforma.
+- imagen (str): Ruta de la imagen utilizada para representar la plataforma.
+- image (pygame.Surface): Superficie que representa la imagen de la plataforma.
+- rect (pygame.Rect): Rectángulo que delimita la posición y dimensiones de la plataforma.
+"""
     def __init__(self, x, y, imagen):
+        """
+Inicializa una nueva instancia de la clase Plataforma.
+
+Parameters:
+- x (int): Coordenada x de la posición de la plataforma.
+- y (int): Coordenada y de la posición de la plataforma.
+- imagen (str): Ruta de la imagen utilizada para representar la plataforma.
+"""
         super().__init__()
         self.image = imagen
         self.image = pygame.image.load(imagen)
@@ -24,7 +51,39 @@ class Plataforma(pygame.sprite.Sprite):
         self.rect.y = y
 
 class Personaje(pygame.sprite.Sprite):
+    """
+Clase que representa al personaje del juego.
+
+Attributes:
+- x (int): Coordenada x de la posición inicial del personaje.
+- y (int): Coordenada y de la posición inicial del personaje.
+- animaciones (list): Lista de animaciones para representar el personaje en diferentes estados.
+- contador_pasos (int): Contador para el seguimiento de pasos del personaje.
+- velocidad (int): Velocidad de movimiento del personaje.
+- posicion_actual_x (int): Índice de la posición actual en la lista de animaciones.
+- imagenes_reescaladas (list): Imágenes reescaladas utilizadas para representar al personaje.
+- rect (pygame.Rect): Rectángulo que delimita la posición y dimensiones del personaje.
+- lados (dict): Diccionario que contiene rectángulos adicionales alrededor del personaje.
+- que_hace (str): Estado actual del personaje (puede ser "Derecha", "Izquierda", "Salta", "Ataque_izquierda", "Ataque_derecha", "Quieto").
+- desplazamiento_y (int): Valor de desplazamiento vertical del personaje.
+- desplazamiento_x (int): Valor de desplazamiento horizontal del personaje.
+- esta_saltando (bool): Indica si el personaje está en estado de salto.
+- tiene_escudo (bool): Indica si el personaje tiene un escudo activado.
+- direccion (str): Dirección actual del personaje ("derecha" o "izquierda").
+- sonido_proyectil (pygame.mixer.Sound): Sonido para los disparos del personaje.
+- sonido_espada (pygame.mixer.Sound): Sonido para los ataques de espada del personaje.
+- tiempo_ultimo_disparo (int): Tiempo del último disparo realizado por el personaje.
+- retraso_entre_disparos (int): Tiempo de retraso entre disparos en milisegundos.
+"""
     def __init__(self, x, y, animaciones):
+        """
+        Inicializa una nueva instancia de la clase Personaje.
+
+        Parameters:
+        - x (int): Coordenada x de la posición inicial del personaje.
+        - y (int): Coordenada y de la posición inicial del personaje.
+        - animaciones (list): Lista de animaciones para representar al personaje en diferentes estados.
+        """
         super().__init__()
         self.animaciones = animaciones
         self.contador_pasos = 0
@@ -47,6 +106,14 @@ class Personaje(pygame.sprite.Sprite):
         self.retraso_entre_disparos = 700 # Establece el retraso deseado entre disparos en milisegundos
         
     def update(self, plataformas):
+
+
+        """
+        Actualiza el estado del personaje en cada fotograma.
+
+        Parameters:
+        - plataformas (list): Lista de plataformas en el juego.
+        """
         keys = pygame.key.get_pressed()
         
  
@@ -105,6 +172,12 @@ class Personaje(pygame.sprite.Sprite):
         self.lados = obtener_rectangulos(self.rect)
 
     def colision_con_plataformas(self, plataformas):
+        """
+Verifica si el personaje colisiona con alguna plataforma en la lista y ajusta su posición en consecuencia.
+
+Parameters:
+- plataformas (list): Lista de plataformas en el juego.
+"""
         for plataforma in plataformas:
             if self.lados["bottom"].colliderect(plataforma.rect) and self.desplazamiento_y >= 0:
                 self.rect.y = plataforma.rect.top - self.rect.height
@@ -233,6 +306,22 @@ class Orbe(pygame.sprite.Sprite):
 
 class Proyectil(pygame.sprite.Sprite):
     def __init__(self, x, y, velocidad, imagen):
+        """
+Inicializa una instancia de la clase Proyectil.
+
+Parámetros:
+- x (int): La coordenada x inicial del proyectil.
+- y (int): La coordenada y inicial del proyectil.
+- velocidad (int): La velocidad horizontal del proyectil.
+- imagen (pygame.Surface): La imagen del proyectil.
+
+Atributos:
+- imagen (pygame.Surface): La imagen del proyectil.
+- rect (pygame.Rect): El rectángulo que rodea al proyectil.
+- velocidad (int): La velocidad horizontal del proyectil.
+- tiempo_creacion (int): El tiempo en milisegundos en el que se creó el proyectil.
+"""
+
         super().__init__()
         self.imagen = imagen
         self.rect = self.imagen.get_rect()
@@ -241,6 +330,14 @@ class Proyectil(pygame.sprite.Sprite):
         self.tiempo_creacion = pygame.time.get_ticks()
 
     def update(self):
+        """
+    Actualiza la posición del proyectil en el juego.
+
+    - Mueve el proyectil horizontalmente según su velocidad.
+    - Dibuja la imagen del proyectil en la pantalla.
+
+    Si el proyectil sale de los límites de la pantalla, se elimina.
+    """
         self.rect.x += self.velocidad
         PANTALLA.blit(self.imagen, self.rect)
 

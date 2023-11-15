@@ -12,11 +12,8 @@ proyectiles_juego_personaje = pygame.sprite.Group()
 gravedad = 2
 potencia_salto = -15
 limite_velocidad_caida = 15
-
-
 velocidad_proyectil = 5
 contador_muerte = 0
-
 
 
 piso = pygame.Rect(0,520,W,20)
@@ -65,7 +62,7 @@ UBICACION_SONIDO_NIVEL_1 = "audio/level_1.wav"
 UBICACION_SONIDO_NIVEL_2 = "audio/level_2.wav"
 UBICACION_SONIDO_NIVEL_3 = "audio/level_3.wav"
 UBICACION_SONIDO_ENEMIGO_MUERE = "audio/enemigo_muere.wav"
-UBICACION_SONIDO_RANGER_MUERE = "audio/muere_trunks.wav"
+UBICACION_SONIDO_TRUNKS_MUERE = "audio/muere_trunks.wav"
 
 #PERSONAJE
 personaje_quieto = [

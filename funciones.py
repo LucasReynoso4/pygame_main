@@ -16,6 +16,15 @@ fondo2 = pygame.transform.scale(fondo2, (W,H))
 pygame.display.set_caption(TITULO_VENTANA)
 
 def centrar(imagen):
+    """
+Calcula la posición horizontal centrada de una imagen en una pantalla.
+
+Parameters:
+- imagen (pygame.Surface): La imagen que se va a centrar.
+
+Returns:
+- int: La posición horizontal centrada.
+"""
     return (W // 2) - imagen.get_width() // 2
 
 #FONDOS
@@ -124,6 +133,15 @@ def iniciar_bucle_juego_3(volumen):
     return False
 
 def seleccion_jugar(volumen):
+    """
+Permite al jugador seleccionar un nivel para jugar.
+
+Parameters:
+- volumen (float): Nivel de volumen del juego.
+
+Returns:
+- bool: Valor que indica si el jugador ha seleccionado un nivel o ha salido del menú.
+"""
     modo_empezar_jugar = True
     audio_jugar = pygame.mixer.Sound(UBICACION_SONIDO_INICIAR)
     audio_nivel_1 = pygame.mixer.Sound(UBICACION_SONIDO_NIVEL_1)
@@ -160,6 +178,15 @@ def seleccion_jugar(volumen):
 
 
 def ranking(volumen=0.2):
+    """
+    Muestra la pantalla de clasificación con los mejores puntajes y opciones para continuar jugando.
+
+    Parameters:
+    - volumen (float): Nivel de volumen del juego. Default es 0.2.
+
+    Returns:
+    - None
+    """
     modo_ranking = True
     audio_click = pygame.mixer.Sound(UBICACION_SONIDO_CLICK)
 
@@ -218,6 +245,17 @@ def mostrar_resultados(PANTALLA, enemigos_eliminados, puntuacion, nivel, tiempo,
     PANTALLA.blit(escudo_texto, (500, H - 560))
 
 def pausa(volume_parametro):
+    """
+    Muestra la pantalla de pausa con opciones para ajustar el volumen y regresar al juego.
+
+    Parameters:
+    - volume_parametro (float): Nivel de volumen inicial. Debe estar en el rango [0.0, 1.0].
+
+    Returns:
+    - dict: Diccionario con dos claves:
+      - "volumen" (float): Nivel de volumen ajustado.
+      - "tiempo_pausa" (int): Tiempo total que el juego ha estado en pausa.
+    """
     modo_pausa = True
     volumen = volume_parametro
     tiempo_pausa = 0
@@ -279,11 +317,20 @@ def pausa(volume_parametro):
     return retorno
 
 def perdiste(puntuacion,volumen):
+    """
+    Muestra la pantalla de pérdida del juego, permitiendo al jugador ingresar su nombre.
+
+    Parameters:
+    - puntuacion (int): Puntuación obtenida por el jugador antes de perder.
+    - volumen (float): Nivel de volumen para reproducir efectos de sonido.
+
+    Returns:
+    - None: La función no tiene un valor de retorno específico, pero puede afectar al estado del juego.
+    """
     modo_perdiste = True
     fuente = pygame.font.SysFont("Arial", 26)
     nombre = ''
     audio_click = pygame.mixer.Sound(UBICACION_SONIDO_CLICK)
-
     textbox_rect = pygame.Rect(340, 300, 300,32)
 
     while modo_perdiste:
@@ -318,6 +365,16 @@ def perdiste(puntuacion,volumen):
         pygame.display.flip()
 
 def ganaste(puntuacion ,volumen):
+    """
+Muestra la pantalla de victoria del juego, permitiendo al jugador ingresar su nombre.
+
+Parameters:
+- puntuacion (int): Puntuación obtenida por el jugador al ganar.
+- volumen (float): Nivel de volumen para reproducir efectos de sonido.
+
+Returns:
+- None: La función no tiene un valor de retorno específico, pero puede afectar al estado del juego.
+"""
     modo_ganaste = True
     fuente = pygame.font.SysFont("Arial", 26)
     nombre = ''
@@ -360,6 +417,18 @@ def ganaste(puntuacion ,volumen):
         pygame.display.flip()
 
 def aplicar_gravedad(pantalla, personaje, pisos, plataformas):
+    """
+Aplica la gravedad al personaje y gestiona las colisiones con el suelo y las plataformas.
+
+Parameters:
+- pantalla (pygame.Surface): Superficie de la pantalla en la que se dibuja el personaje.
+- personaje (Personaje): Instancia del personaje al que se le aplica la gravedad.
+- pisos (list): Lista de rectángulos que representan el suelo del nivel.
+- plataformas (pygame.sprite.Group): Grupo de plataformas en el nivel.
+
+Returns:
+- None: La función no tiene un valor de retorno específico, pero puede afectar al estado del personaje.
+"""
     if personaje.esta_saltando:
         animar_personaje(pantalla, personaje.lados["main"], personaje_salta, personaje)
         if personaje.desplazamiento_y < limite_velocidad_salto:  # Agregar límite de velocidad de salto
@@ -384,10 +453,32 @@ def aplicar_gravedad(pantalla, personaje, pisos, plataformas):
     personaje.rect.y += personaje.desplazamiento_y
 
 def mover(rectangulo: pygame.rect, velocidad):
+    """
+Mueve un rectángulo en todas las direcciones según la velocidad especificada.
+
+Parameters:
+- rectangulo (pygame.Rect): Rectángulo a mover.
+- velocidad (int): Velocidad de movimiento. La dirección se determina por el signo de la velocidad.
+
+Returns:
+- None: La función modifica el rectángulo directamente.
+"""
     for lado in rectangulo:
         rectangulo[lado].x += velocidad
 
 def animar_personaje(pantalla, rectangulo, accion, personaje):
+    """
+Anima el personaje en la pantalla.
+
+Parameters:
+- pantalla (pygame.Surface): Superficie de la pantalla en la que se dibuja el personaje.
+- rectangulo (pygame.Rect): Rectángulo que representa la posición del personaje en la pantalla.
+- accion (list): Lista de imágenes que componen la animación del personaje.
+- personaje (Personaje): Instancia del personaje que se está animando.
+
+Returns:
+- None: La función dibuja la animación en la pantalla.
+"""
     largo = len(accion)
     if personaje.contador_pasos >= largo:
         personaje.contador_pasos = 0
@@ -396,6 +487,20 @@ def animar_personaje(pantalla, rectangulo, accion, personaje):
     personaje.contador_pasos += 1
 
 def actualizar_pantalla(pantalla, lados_piso, grupo_enemigos, grupo_plataformas, orbe, personaje):
+    """
+    Actualiza y muestra la pantalla del juego con los elementos dados.
+
+    Parameters:
+    - pantalla (pygame.Surface): Superficie de la pantalla del juego.
+    - lados_piso (list): Lista de rectángulos que representan las plataformas del suelo.
+    - grupo_enemigos (pygame.sprite.Group): Grupo de enemigos en el juego.
+    - grupo_plataformas (pygame.sprite.Group): Grupo de plataformas en el juego.
+    - orbe (Orbe): Instancia del orbe en el juego.
+    - personaje (Personaje): Instancia del personaje en el juego.
+
+    Returns:
+    - None: La función actualiza y muestra la pantalla del juego.
+    """
     pantalla.blit(fondo, (0,0))
 
     for plataforma in grupo_plataformas:
@@ -441,6 +546,17 @@ def actualizar_pantalla(pantalla, lados_piso, grupo_enemigos, grupo_plataformas,
     aplicar_gravedad(PANTALLA, personaje, lados_piso, grupo_plataformas)
 
 def animar_muerte_enemigo(pantalla, enemigo_muere, rectangulo_enemigo): 
+    """
+    Anima la muerte de un enemigo en la pantalla.
+
+    Parameters:
+    - pantalla (pygame.Surface): Superficie de la pantalla del juego.
+    - enemigo_muere (list): Lista de imágenes que representan la animación de la muerte del enemigo.
+    - rectangulo_enemigo (pygame.Rect): Rectángulo que representa la posición del enemigo en la pantalla.
+
+    Returns:
+    - None: La función muestra la animación de la muerte del enemigo en la pantalla.
+    """
     global contador_muerte
     largo = len(enemigo_muere)
     if contador_muerte >= largo:
@@ -451,10 +567,28 @@ def animar_muerte_enemigo(pantalla, enemigo_muere, rectangulo_enemigo):
     pygame.time.delay(100)
 
 def eliminar_enemigo(enemigo):
+    """
+Elimina un enemigo moviéndolo a una posición fuera de la pantalla.
+
+Parameters:
+- enemigo: Instancia del enemigo a ser eliminado.
+
+Returns:
+- None: La función mueve el enemigo a una posición fuera de la pantalla.
+"""
     enemigo.x = -1000
     enemigo.y = -1000
 
 def bucle_de_juego_nivel_1(volumen_parametro = 0.2):
+    """
+Bucle principal para el nivel 1 del juego.
+
+Parameters:
+- volumen_parametro (float): Volumen inicial del juego.
+
+Returns:
+- None: La función ejecuta el bucle del juego hasta que se complete o el jugador decida salir.
+"""
     #ELIMINAR PROYECTILES
     proyectiles_juego_personaje.empty()
     #MUSICA
@@ -463,7 +597,7 @@ def bucle_de_juego_nivel_1(volumen_parametro = 0.2):
     pygame.mixer.music.play(loops=-1)
     volumen = volumen_parametro
     pygame.mixer.music.set_volume(volumen)
-    sonido_muere_personaje = pygame.mixer.Sound(UBICACION_SONIDO_RANGER_MUERE)
+    sonido_muere_personaje = pygame.mixer.Sound(UBICACION_SONIDO_TRUNKS_MUERE)
     sonido_muere_enemigo = pygame.mixer.Sound(UBICACION_SONIDO_ENEMIGO_MUERE)
     #TEXTO
     fuente = pygame.font.SysFont("Arial", 100)
@@ -623,7 +757,7 @@ def bucle_de_juego_nivel_1(volumen_parametro = 0.2):
         mostrar_resultados(PANTALLA, enemigos_eliminados, puntuacion, nivel, tiempo, vidas, personaje.tiene_escudo)    
         pygame.display.flip()
 
-def bucle_de_juego_nivel_2(volumen_parametro = 0.2): #no terminado
+def bucle_de_juego_nivel_2(volumen_parametro = 0.2): 
     #ELIMINAR PROYECTILES
     proyectiles_juego_personaje.empty()
     #MUSICA
@@ -631,7 +765,7 @@ def bucle_de_juego_nivel_2(volumen_parametro = 0.2): #no terminado
     pygame.mixer.music.play(loops=-1)
     volumen = volumen_parametro
     pygame.mixer.music.set_volume(volumen)
-    sonido_muere_personaje = pygame.mixer.Sound(UBICACION_SONIDO_RANGER_MUERE)
+    sonido_muere_personaje = pygame.mixer.Sound(UBICACION_SONIDO_TRUNKS_MUERE)
     sonido_muere_enemigo = pygame.mixer.Sound(UBICACION_SONIDO_ENEMIGO_MUERE)
     #TEXTO
     fuente = pygame.font.SysFont("Arial", 100)
@@ -807,6 +941,21 @@ def bucle_de_juego_nivel_2(volumen_parametro = 0.2): #no terminado
 
 
 def actualizar_pantalla_boss(pantalla, lados_piso, grupo_enemigos, grupo_plataformas, orbe, personaje, boss):
+    """
+Actualiza y dibuja los elementos en la pantalla durante la pelea con el jefe (boss).
+
+Parameters:
+- pantalla (pygame.Surface): La superficie de la pantalla donde se renderizan los elementos.
+- lados_piso (list): Lista de rectángulos que representan los lados del suelo.
+- grupo_enemigos (pygame.sprite.Group): Grupo de enemigos en el nivel.
+- grupo_plataformas (pygame.sprite.Group): Grupo de plataformas en el nivel.
+- orbe (Orbe): Instancia de la clase Orbe que representa un objeto especial en el nivel.
+- personaje (Personaje): Instancia de la clase Personaje que representa al jugador.
+- boss (Boss): Instancia de la clase Boss que representa al jefe del nivel.
+
+Returns:
+- None: La función actualiza y dibuja los elementos en la pantalla.
+"""
     pantalla.blit(fondo, (0,0))
     for plataforma in grupo_plataformas:
         pantalla.blit(plataforma.image, plataforma.rect)
@@ -850,7 +999,7 @@ def actualizar_pantalla_boss(pantalla, lados_piso, grupo_enemigos, grupo_platafo
         enemigo.update(grupo_plataformas)
     aplicar_gravedad(PANTALLA, personaje, lados_piso, grupo_plataformas)
 
-def bucle_de_juego_nivel_3(volumen_parametro = 0.2): #no terminado
+def bucle_de_juego_nivel_3(volumen_parametro = 0.2): 
     #ELIMINAR PROYECTILES
     proyectiles_juego_personaje.empty()
     #MUSICA
@@ -858,7 +1007,7 @@ def bucle_de_juego_nivel_3(volumen_parametro = 0.2): #no terminado
     pygame.mixer.music.play(loops=-1)
     volumen = volumen_parametro
     pygame.mixer.music.set_volume(volumen)
-    sonido_muere_personaje = pygame.mixer.Sound(UBICACION_SONIDO_RANGER_MUERE)
+    sonido_muere_personaje = pygame.mixer.Sound(UBICACION_SONIDO_TRUNKS_MUERE)
     sonido_muere_enemigo = pygame.mixer.Sound(UBICACION_SONIDO_ENEMIGO_MUERE)
     #TEXTO
     fuente = pygame.font.SysFont("Arial", 100)
